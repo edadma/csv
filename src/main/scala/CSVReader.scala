@@ -92,7 +92,9 @@ package object csv {
       if (!input.eoi) {
         record
         readInput
-      } else
+      } else if (records isEmpty)
+        List(List("")) // according to spec a csv file has at least one record
+      else
         records.toList
     }
 
