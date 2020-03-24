@@ -1,18 +1,20 @@
-package xyz.hyperreal._scala_native
+package xyz.hyperreal.csv
 
 import utest._
+
+import scala.util.Success
 
 object UnitTests extends TestSuite {
 
   val tests = Tests {
-    test("test 1") {
-      assert(1 + 2 == 3)
-    }
-
-    test("test 2") {
-      val a = "asdf"
-
-      assert(s"$a 123" == "asdf 123")
+    test("basic") {
+      assert(
+        readFromString(
+          """
+          |11,12
+          |21,22
+          """.trim.stripMargin
+        ) == Success(List(List("11", "12"), List("21", "22"))))
     }
   }
 

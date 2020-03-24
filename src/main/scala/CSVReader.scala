@@ -7,7 +7,7 @@ package object csv {
 
   import scala.collection.mutable.ListBuffer
 
-  def read(file: String, delimiter: Char = ','): Try[List[List[String]]] = {
+  def readFromFile(file: String, delimiter: Char = ','): Try[List[List[String]]] = {
 
     val path = Paths.get(file)
 
@@ -15,8 +15,14 @@ package object csv {
     require(Files.isRegularFile(path), s"not a regular file: $file")
     require(Files.isReadable(path), s"not readable: $file")
 
+    readFromReader(CharReader.fromInputStream(Files.newInputStream(path)))
+  }
+
+  def readFromString(s: String) = readFromReader(new StringCharReader(s))
+
+  def readFromReader(in: CharReader) = {
+    var input   = in
     val records = new ListBuffer[List[String]]
-    var input   = CharReader.fromInputStream(Files.newInputStream(path))
 
     def readInput: List[List[String]] = {
       def consume(except: Char*): String = {
@@ -35,11 +41,23 @@ package object csv {
       }
 
       def field = {
-        consume(',', '\n')
+        consume(',', '\r', '\n')
       }
 
       def record = {
-        records += List(field)
+        val l = new ListBuffer[String]
+
+        def fields: List[String] = {
+          l += field
+
+          if (!input.eoi && input.ch == ',') {
+            advance
+            fields
+          } else
+            l.toList
+        }
+
+        records += fields
 
         opt('\r')
 
@@ -78,13 +96,13 @@ package object csv {
         records.toList
     }
 
-//    def field: String
-//      =
-//      {
-//
-//
-//
-//      }
+    //    def field: String
+    //      =
+    //      {
+    //
+    //
+    //
+    //      }
 
     Try(readInput)
   }

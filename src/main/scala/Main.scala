@@ -2,6 +2,13 @@ package xyz.hyperreal.csv
 
 object Main extends App {
 
-  println(read("test.csv"))
+  val text =
+    """
+      |11,12
+      |21,22
+    """.trim.stripMargin
+
+//  println(readFromFile("test.csv"))
+  println(readFromString(text))
 
 }
