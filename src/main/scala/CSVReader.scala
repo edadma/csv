@@ -1,36 +1,91 @@
-package xyz.hyperreal.csv
+package xyz.hyperreal
 
-import scala.collection.AbstractIterator
-import scala.util.{Failure, Success, Try}
+package object csv {
 
-import java.nio.file.{Files, Paths}
+  import scala.util.Try
+  import java.nio.file.{Files, Paths}
 
-class CSVReader(file: String, delimiter: Char = ',') extends AbstractIterator[Try[List[String]]] {
+  import scala.collection.mutable.ListBuffer
 
-  private val path                      = Paths.get(file)
-  private var record: Try[List[String]] = _
+  def read(file: String, delimiter: Char = ','): Try[List[List[String]]] = {
 
-  require(Files.exists(path), s"doesn't exist: $file")
-  require(Files.isRegularFile(path), s"not a regular file: $file")
-  require(Files.isReadable(path), s"not readable: $file")
+    val path = Paths.get(file)
 
-  private val input = CharReader.fromInputStream(Files.newInputStream(path))
+    require(Files.exists(path), s"doesn't exist: $file")
+    require(Files.isRegularFile(path), s"not a regular file: $file")
+    require(Files.isReadable(path), s"not readable: $file")
 
-  readRecord
+    val records = new ListBuffer[List[String]]
+    var input   = CharReader.fromInputStream(Files.newInputStream(path))
 
-  private def readRecord = {
-    def field = {}
+    def readInput: List[List[String]] = {
+      def consume(except: Char*): String = {
+        val buf = new StringBuilder
+
+        def consume: String =
+          if (input.eoi || (except contains input.ch))
+            buf.toString
+          else {
+            buf += input.ch
+            advance
+            consume
+          }
+
+        consume
+      }
+
+      def field = {
+        consume(',', '\n')
+      }
+
+      def record = {
+        records += List(field)
+
+        opt('\r')
+
+        if (!input.eoi)
+          chr('\n')
+      }
+
+      def advance = input = input.next
+
+      def chr(c: Char) = {
+        val s =
+          c match {
+            case '\r' => "\\r"
+            case '\n' => "\\n"
+            case _    => s"$c"
+          }
+
+        if (input.eoi)
+          sys.error(s"expected '$s', but end of input")
+        else if (input.ch == c)
+          advance
+        else
+          sys.error(s"expected '$s', but encountered '${input.ch}'")
+      }
+
+      def opt(c: Char) =
+        if (!input.eoi) {
+          if (input.ch == c)
+            chr(c)
+        }
+
+      if (!input.eoi) {
+        record
+        readInput
+      } else
+        records.toList
+    }
+
+//    def field: String
+//      =
+//      {
+//
+//
+//
+//      }
+
+    Try(readInput)
   }
-
-  def hasNext = record ne null
-
-  def next =
-    if (hasNext) {
-      val res = record
-
-      readRecord
-      res
-    } else
-      throw new NoSuchElementException(s"no more records from $file")
-
 }
