@@ -1,4 +1,5 @@
-package xyz.hyperreal._scala_native
+package xyz.hyperreal.csv
+
 
 object Main extends App {
 

@@ -1,4 +1,4 @@
-name := "-scala-native"
+name := "csv"
 
 version := "0.1.0"
 
