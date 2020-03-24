@@ -46,6 +46,15 @@ object UnitTests extends TestSuite {
           """.trim.stripMargin
         ) == Success(List(List("11"))))
     }
+    test("quoted fields") {
+      assert(
+        readFromString(
+          """
+            |11,"12"
+            |"2""1",22
+          """.trim.stripMargin
+        ) == Success(List(List("11", "12"), List("2\"1", "22"))))
+    }
     test("empty fields") {
       assert(
         readFromString(

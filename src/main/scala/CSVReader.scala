@@ -8,7 +8,6 @@ package object csv {
   import scala.collection.mutable.ListBuffer
 
   def readFromFile(file: String, delimiter: Char = ','): Try[List[List[String]]] = {
-
     val path = Paths.get(file)
 
     require(Files.exists(path), s"doesn't exist: $file")
@@ -40,9 +39,30 @@ package object csv {
         consume
       }
 
-      def field = {
-        consume(delimiter, '\r', '\n')
-      }
+      def field =
+        if (input.more) {
+          if (input.ch == '"') {
+            advance
+
+            val chunks = new StringBuilder
+
+            def chunk: Unit = {
+              chunks ++= consume('"')
+
+              if (input.next.more && input.next.ch == '"') {
+                input = input.next.next
+                chunks += '"'
+                chunk
+              }
+            }
+
+            chunk
+            chr('"')
+            chunks.toString
+          } else
+            consume(delimiter, '\r', '\n', '"')
+        } else
+          ""
 
       def record = {
         val l = new ListBuffer[String]
@@ -50,7 +70,7 @@ package object csv {
         def fields: List[String] = {
           l += field
 
-          if (!input.eoi && input.ch == delimiter) {
+          if (input.more && input.ch == delimiter) {
             advance
             fields
           } else
@@ -61,7 +81,7 @@ package object csv {
 
         opt('\r')
 
-        if (!input.eoi)
+        if (input.more)
           chr('\n')
       }
 
@@ -76,20 +96,20 @@ package object csv {
           }
 
         if (input.eoi)
-          sys.error(s"expected '$s', but end of input")
+          input.error(s"expected '$s', but end of input")
         else if (input.ch == c)
           advance
         else
-          sys.error(s"expected '$s', but encountered '${input.ch}'")
+          input.error(s"expected '$s', but encountered '${input.ch}'")
       }
 
       def opt(c: Char) =
-        if (!input.eoi) {
+        if (input.more) {
           if (input.ch == c)
             chr(c)
         }
 
-      if (!input.eoi) {
+      if (input.more) {
         record
         readInput
       } else if (records isEmpty)

@@ -11,7 +11,7 @@ object Main extends App {
 //    """.trim.stripMargin
 //
 //  println(readFromString(text))
-//  println(readFromFile("test.csv"))
-  println(readFromString("a\tb", '\t'))
+  println(readFromFile("test.csv"))
+//  println(readFromString(""""a",b"""))
 
 }
