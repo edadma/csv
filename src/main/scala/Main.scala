@@ -12,9 +12,6 @@ object Main extends App {
 //
 //  println(readFromString(text))
 //  println(readFromFile("test.csv"))
-//  println(readFromString("\n"))
-  val Success(List(l)) = readFromString("\n")
-
-  println(l, l.length, l.head.length)
+  println(readFromString("a\tb", '\t'))
 
 }

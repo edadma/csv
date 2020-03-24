@@ -7,6 +7,12 @@ import scala.util.Success
 object UnitTests extends TestSuite {
 
   val tests = Tests {
+    test("tab as delimiter") {
+      assert(readFromString("a\tb", '\t') == Success(List(List("a", "b"))))
+      assert(readFromString("\tb", '\t') == Success(List(List("", "b"))))
+      assert(readFromString("a\t", '\t') == Success(List(List("a", ""))))
+      assert(readFromString("\t", '\t') == Success(List(List("", ""))))
+    }
     test("empty file") {
       assert(readFromString("") == Success(List(List(""))))
       assert(readFromString("\n") == Success(List(List(""))))

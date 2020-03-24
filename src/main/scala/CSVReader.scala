@@ -15,12 +15,12 @@ package object csv {
     require(Files.isRegularFile(path), s"not a regular file: $file")
     require(Files.isReadable(path), s"not readable: $file")
 
-    readFromReader(CharReader.fromInputStream(Files.newInputStream(path)))
+    readFromReader(CharReader.fromInputStream(Files.newInputStream(path)), delimiter)
   }
 
-  def readFromString(s: String) = readFromReader(new StringCharReader(s))
+  def readFromString(s: String, delimiter: Char = ',') = readFromReader(new StringCharReader(s), delimiter)
 
-  def readFromReader(in: CharReader) = {
+  def readFromReader(in: CharReader, delimiter: Char = ',') = {
     var input   = in
     val records = new ListBuffer[List[String]]
 
@@ -41,7 +41,7 @@ package object csv {
       }
 
       def field = {
-        consume(',', '\r', '\n')
+        consume(delimiter, '\r', '\n')
       }
 
       def record = {
@@ -50,7 +50,7 @@ package object csv {
         def fields: List[String] = {
           l += field
 
-          if (!input.eoi && input.ch == ',') {
+          if (!input.eoi && input.ch == delimiter) {
             advance
             fields
           } else
