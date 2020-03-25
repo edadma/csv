@@ -1,25 +1,25 @@
-package xyz.hyperreal
+package xyz.hyperreal.csv
 
-package object csv {
+import scala.util.Try
+import java.nio.file.{Files, Path, Paths}
 
-  import scala.util.Try
-  import java.nio.file.{Files, Paths}
+import scala.collection.mutable.ListBuffer
 
-  import scala.collection.mutable.ListBuffer
+object CSVReader {
 
-  def readFromFile(file: String, delimiter: Char = ','): Try[List[List[String]]] = {
-    val path = Paths.get(file)
+  def fromFile(file: String, delimiter: Char = ','): Try[List[List[String]]] = fromPath(Paths.get(file))
 
-    require(Files.exists(path), s"doesn't exist: $file")
-    require(Files.isRegularFile(path), s"not a regular file: $file")
-    require(Files.isReadable(path), s"not readable: $file")
+  def fromPath(path: Path, delimiter: Char = ','): Try[List[List[String]]] = {
+    require(Files.exists(path), s"doesn't exist: $path")
+    require(Files.isRegularFile(path), s"not a regular file: $path")
+    require(Files.isReadable(path), s"not readable: $path")
 
-    readFromReader(CharReader.fromInputStream(Files.newInputStream(path)), delimiter)
+    fromReader(CharReader.fromInputStream(Files.newInputStream(path)), delimiter)
   }
 
-  def readFromString(s: String, delimiter: Char = ',') = readFromReader(new StringCharReader(s), delimiter)
+  def fromString(s: String, delimiter: Char = ',') = fromReader(new StringCharReader(s), delimiter)
 
-  def readFromReader(in: CharReader, delimiter: Char = ',') = {
+  def fromReader(in: CharReader, delimiter: Char = ',') = {
     var input   = in
     val records = new ListBuffer[List[String]]
 

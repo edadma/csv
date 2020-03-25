@@ -8,39 +8,39 @@ object UnitTests extends TestSuite {
 
   val tests = Tests {
     test("tab as delimiter") {
-      assert(readFromString("a\tb", '\t') == Success(List(List("a", "b"))))
-      assert(readFromString("\tb", '\t') == Success(List(List("", "b"))))
-      assert(readFromString("a\t", '\t') == Success(List(List("a", ""))))
-      assert(readFromString("\t", '\t') == Success(List(List("", ""))))
+      assert(CSVReader.fromString("a\tb", '\t') == Success(List(List("a", "b"))))
+      assert(CSVReader.fromString("\tb", '\t') == Success(List(List("", "b"))))
+      assert(CSVReader.fromString("a\t", '\t') == Success(List(List("a", ""))))
+      assert(CSVReader.fromString("\t", '\t') == Success(List(List("", ""))))
     }
     test("empty file") {
-      assert(readFromString("") == Success(List(List(""))))
-      assert(readFromString("\n") == Success(List(List(""))))
-      assert(readFromString("\r\n") == Success(List(List(""))))
+      assert(CSVReader.fromString("") == Success(List(List(""))))
+      assert(CSVReader.fromString("\n") == Success(List(List(""))))
+      assert(CSVReader.fromString("\r\n") == Success(List(List(""))))
     }
     test("basic") {
       assert(
-        readFromString(
+        CSVReader.fromString(
           """
           |11,12
           |21,22
           """.trim.stripMargin
         ) == Success(List(List("11", "12"), List("21", "22"))))
       assert(
-        readFromString(
+        CSVReader.fromString(
           """
             |11
             |21
           """.trim.stripMargin
         ) == Success(List(List("11"), List("21"))))
       assert(
-        readFromString(
+        CSVReader.fromString(
           """
             |11,12
           """.trim.stripMargin
         ) == Success(List(List("11", "12"))))
       assert(
-        readFromString(
+        CSVReader.fromString(
           """
             |11
           """.trim.stripMargin
@@ -48,51 +48,51 @@ object UnitTests extends TestSuite {
     }
     test("quoted fields") {
       assert(
-        readFromString(
+        CSVReader.fromString(
           """
             |11,"12"
-            |"2""1",22
+            |"2""1","22"
           """.trim.stripMargin
         ) == Success(List(List("11", "12"), List("2\"1", "22"))))
     }
     test("empty fields") {
       assert(
-        readFromString(
+        CSVReader.fromString(
           """
             |,12
             |21,22
           """.trim.stripMargin
         ) == Success(List(List("", "12"), List("21", "22"))))
       assert(
-        readFromString(
+        CSVReader.fromString(
           """
             |11,
             |21,22
           """.trim.stripMargin
         ) == Success(List(List("11", ""), List("21", "22"))))
       assert(
-        readFromString(
+        CSVReader.fromString(
           """
             |11,12
             |,22
           """.trim.stripMargin
         ) == Success(List(List("11", "12"), List("", "22"))))
       assert(
-        readFromString(
+        CSVReader.fromString(
           """
             |11,12
             |21,
           """.trim.stripMargin
         ) == Success(List(List("11", "12"), List("21", ""))))
       assert(
-        readFromString(
+        CSVReader.fromString(
           """
             |
             |21
           """.trim.stripMargin
         ) == Success(List(List(""), List("21"))))
       assert(
-        readFromString(
+        CSVReader.fromString(
           """
             |11
             |
