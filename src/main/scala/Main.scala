@@ -14,5 +14,5 @@ object Main extends App {
 //  println(readFromFile("test.csv"))
 //  println(readFromString(""""a",b"""))
 
-  print(CSVWrite.toString(List(List("asdf1", "qwer1"), List("asdf2", "qwer2"))))
+  println(CSVWrite.toString(List(List("\"a"))) map (_.toInt))
 }

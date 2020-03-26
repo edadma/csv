@@ -6,27 +6,27 @@ import java.nio.file.{Files, Path}
 
 object CSVWrite {
 
-  def toWriter(out: Writer, data: List[List[String]], delimiter: Char = ',') =
-    out write toString(data, delimiter)
+  def toWriter(out: Writer, data: List[List[String]], delimiter: Char = ',', cr: Boolean = false) =
+    out write toString(data, delimiter, cr)
 
-  def toPath(path: Path, cs: Charset, data: List[List[String]], delimiter: Char = ',') =
-    toWriter(Files.newBufferedWriter(path, cs), data)
+  def toPath(path: Path, cs: Charset, data: List[List[String]], delimiter: Char = ',', cr: Boolean = false) =
+    toWriter(Files.newBufferedWriter(path, cs), data, delimiter, cr)
 
-  def toString(data: List[List[String]], delimiter: Char = ',') = {
+  def toString(data: List[List[String]], delimiter: Char = ',', cr: Boolean = false) = {
     val buf = new StringBuilder
     val q   = "\""
 
     for (r <- data) {
       val r1 =
         r map { f =>
-          if ((r contains ',') || (r contains '\r') || (r contains '\n') || (r contains '"'))
+          if ((f contains ',') || (f contains '\r') || (f contains '\n') || (f contains '"'))
             s"$q${f.replace("\"", "\"\"")}$q"
           else
             f
         }
 
       buf ++= r1 mkString delimiter.toString
-      buf ++= "\r\n"
+      buf ++= (if (cr) "\r\n" else "\n")
     }
 
     buf.toString

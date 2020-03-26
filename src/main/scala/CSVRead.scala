@@ -5,7 +5,7 @@ import java.nio.file.{Files, Path, Paths}
 
 import scala.collection.mutable.ListBuffer
 
-object CSVReader {
+object CSVRead {
 
   def fromFile(file: String, delimiter: Char = ','): Try[List[List[String]]] = fromPath(Paths.get(file))
 
