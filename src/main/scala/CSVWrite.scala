@@ -2,9 +2,12 @@ package xyz.hyperreal.csv
 
 import java.io.Writer
 import java.nio.charset.Charset
-import java.nio.file.{Files, Path}
+import java.nio.file.{Files, Path, Paths}
 
 object CSVWrite {
+
+  def toFile(file: String, cs: Charset, data: List[List[String]], delimiter: Char = ',', cr: Boolean = false) =
+    toPath(Paths.get(file), cs, data, delimiter, cr)
 
   def toWriter(out: Writer, data: List[List[String]], delimiter: Char = ',', cr: Boolean = false) =
     out write toString(data, delimiter, cr)
