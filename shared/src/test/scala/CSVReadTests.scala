@@ -1,24 +1,24 @@
 package xyz.hyperreal.csv
 
-import utest._
+import org.scalatest.freespec.AnyFreeSpec
+import org.scalatest.matchers.should.Matchers
 
-import scala.util.Success
+object CSVReadTests extends AnyFreeSpec with Matchers {
 
-object CSVReadTests extends TestSuite {
-
-  val tests = Tests {
-    test("tab as delimiter") {
+    "tab as delimiter" in {
       assert(CSVRead.fromString("a\tb", '\t') == Success(List(List("a", "b"))))
       assert(CSVRead.fromString("\tb", '\t') == Success(List(List("", "b"))))
       assert(CSVRead.fromString("a\t", '\t') == Success(List(List("a", ""))))
       assert(CSVRead.fromString("\t", '\t') == Success(List(List("", ""))))
     }
-    test("empty file") {
+
+    "empty file" in {
       assert(CSVRead.fromString("") == Success(List(List(""))))
       assert(CSVRead.fromString("\n") == Success(List(List(""))))
       assert(CSVRead.fromString("\r\n") == Success(List(List(""))))
     }
-    test("basic") {
+
+    "basic" in {
       assert(
         CSVRead.fromString(
           """
@@ -100,6 +100,5 @@ object CSVReadTests extends TestSuite {
           """.trim.stripMargin
         ) == Success(List(List("11"), List(""))))
     }
-  }
 
 }

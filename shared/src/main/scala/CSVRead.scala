@@ -5,6 +5,8 @@ import java.nio.file.{Files, Path, Paths}
 
 import scala.collection.mutable.ListBuffer
 
+import xyz.hyperreal.char_reader._
+
 object CSVRead {
 
   def fromFile(file: String, delimiter: Char = ','): Try[List[List[String]]] = fromPath(Paths.get(file))
@@ -17,7 +19,7 @@ object CSVRead {
     fromReader(CharReader.fromInputStream(Files.newInputStream(path)), delimiter)
   }
 
-  def fromString(s: String, delimiter: Char = ',') = fromReader(new StringCharReader(s), delimiter)
+  def fromString(s: String, delimiter: Char = ',') = fromReader(CharReader.fromString(s), delimiter)
 
   def fromReader(in: CharReader, delimiter: Char = ',') = {
     var input   = in

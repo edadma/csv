@@ -1,52 +1,33 @@
-name := "csv"
-
-version := "0.1.0"
-
-scalaVersion := "2.11.12"
-
-nativeLinkStubs := true
-
-nativeMode := "debug"
-
-nativeLinkingOptions := Seq( s"-L/${baseDirectory.value}/native-lib" )
-
-scalacOptions ++= Seq( "-deprecation", "-feature", "-unchecked", "-language:postfixOps", "-language:implicitConversions", "-language:existentials" )
-
-organization := "xyz.hyperreal"
-
-resolvers += "Hyperreal Repository" at "https://dl.bintray.com/edadma/maven"
-
-mainClass in (Compile, run) := Some( "xyz.hyperreal." + name.value.replace('-', '_') + ".Main" )
-
-licenses := Seq("ISC" -> url("https://opensource.org/licenses/ISC"))
-
-homepage := Some(url("https://github.com/edadma/" + name.value))
-
-enablePlugins(ScalaNativePlugin)
-
-libraryDependencies += "com.lihaoyi" %%% "utest" % "0.7.1" % "test"
-
-testFrameworks += new TestFramework( "utest.runner.Framework" )
-
-libraryDependencies ++= Seq(
-  "com.github.scopt" %%% "scopt" % "3.7.0"
-)
-
-publishMavenStyle := true
-
-publishArtifact in Test := false
-
-pomIncludeRepository := { _ => false }
-
-pomExtra :=
-  <scm>
-    <url>git@github.com:edadma/{name.value}.git</url>
-    <connection>scm:git:git@github.com:edadma/{name.value}.git</connection>
-  </scm>
-  <developers>
-    <developer>
-      <id>edadma</id>
-      <name>Edward A. Maxedon, Sr.</name>
-      <url>https://github.com/edadma</url>
-    </developer>
-  </developers>
+lazy val csv = crossProject(JSPlatform, JVMPlatform, NativePlatform).in(file(".")).
+  settings(
+    name := "csv",
+    version := "0.1.0-snapshot.1",
+    scalaVersion := "2.13.5",
+    scalacOptions ++=
+      Seq(
+        "-deprecation", "-feature", "-unchecked",
+        "-language:postfixOps", "-language:implicitConversions", "-language:existentials", "-language:dynamics",
+        "-Xasync"
+      ),
+    organization := "xyz.hyperreal",
+    mainClass := Some("xyz.hyperreal.csv.Main"),
+    libraryDependencies += "org.scalatest" %%% "scalatest" % "3.2.5" % "test",
+    libraryDependencies += "xyz.hyperreal" %%% "char-reader" % "0.1.9",
+    publishMavenStyle := true,
+    publishArtifact in Test := false,
+    licenses += "ISC" -> url("https://opensource.org/licenses/ISC")
+  ).
+  jvmSettings(
+    libraryDependencies += "org.scala-js" %% "scalajs-stubs" % "1.0.0" % "provided",
+  ).
+  nativeSettings(
+    nativeLinkStubs := true
+  ).
+  jsSettings(
+    jsEnv := new org.scalajs.jsenv.nodejs.NodeJSEnv(),
+    //    Test / scalaJSUseMainModuleInitializer := true,
+    //    Test / scalaJSUseTestModuleInitializer := false,
+    Test / scalaJSUseMainModuleInitializer := false,
+    Test / scalaJSUseTestModuleInitializer := true,
+    scalaJSUseMainModuleInitializer := true,
+  )
