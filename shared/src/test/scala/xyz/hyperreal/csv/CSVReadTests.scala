@@ -8,7 +8,7 @@ import scala.util.Success
 object CSVReadTests extends AnyFreeSpec with Matchers {
 
   "tab as delimiter" in {
-    CSVRead.fromString("a\tb", '\t') shouldBe List(List("a", "b"))
+    CSVRead.fromString("a\tb", '\t') shouldBe Success(List(List("a", "b")))
 //    assert(CSVRead.fromString("\tb", '\t') == Success(List(List("", "b"))))
 //    assert(CSVRead.fromString("a\t", '\t') == Success(List(List("a", ""))))
 //    assert(CSVRead.fromString("\t", '\t') == Success(List(List("", ""))))
