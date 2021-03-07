@@ -1,22 +1,16 @@
 package xyz.hyperreal.csv
 
 import scala.util.Try
-import java.nio.file.{Files, Path, Paths}
-
 import scala.collection.mutable.ListBuffer
-
 import xyz.hyperreal.char_reader._
+import xyz.hyperreal.cross_plateform.readableFile
 
 object CSVRead {
 
-  def fromFile(file: String, delimiter: Char = ','): Try[List[List[String]]] = fromPath(Paths.get(file))
+  def fromFile(file: String, delimiter: Char = ','): Try[List[List[String]]] = {
+    require(readableFile(file), s"not readable: $file")
 
-  def fromPath(path: Path, delimiter: Char = ','): Try[List[List[String]]] = {
-    require(Files.exists(path), s"doesn't exist: $path")
-    require(Files.isRegularFile(path), s"not a regular file: $path")
-    require(Files.isReadable(path), s"not readable: $path")
-
-    fromReader(CharReader.fromInputStream(Files.newInputStream(path)), delimiter)
+    fromReader(CharReader.fromFile(file), delimiter)
   }
 
   def fromString(s: String, delimiter: Char = ',') = fromReader(CharReader.fromString(s), delimiter)
@@ -114,7 +108,7 @@ object CSVRead {
       if (input.more) {
         record
         readInput
-      } else if (records isEmpty)
+      } else if (records.isEmpty)
         List(List("")) // according to spec a csv file has at least one record
       else
         records.toList

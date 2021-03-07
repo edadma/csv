@@ -1,7 +1,7 @@
 lazy val csv = crossProject(JSPlatform, JVMPlatform, NativePlatform).in(file(".")).
   settings(
     name := "csv",
-    version := "0.1.0-snapshot.1",
+    version := "0.1.0",
     scalaVersion := "2.13.5",
     scalacOptions ++=
       Seq(
@@ -13,6 +13,7 @@ lazy val csv = crossProject(JSPlatform, JVMPlatform, NativePlatform).in(file("."
     mainClass := Some("xyz.hyperreal.csv.Main"),
     libraryDependencies += "org.scalatest" %%% "scalatest" % "3.2.5" % "test",
     libraryDependencies += "xyz.hyperreal" %%% "char-reader" % "0.1.9",
+    libraryDependencies += "xyz.hyperreal" %%% "cross-platform" % "0.1.0-snapshot.2",
     publishMavenStyle := true,
     publishArtifact in Test := false,
     licenses += "ISC" -> url("https://opensource.org/licenses/ISC")
