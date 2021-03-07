@@ -25,6 +25,7 @@ lazy val csv = crossProject(JSPlatform, JVMPlatform, NativePlatform).in(file("."
     nativeLinkStubs := true
   ).
   jsSettings(
+    scalaJSLinkerConfig ~= { _.withModuleKind(ModuleKind.CommonJSModule) },
     jsEnv := new org.scalajs.jsenv.nodejs.NodeJSEnv(),
     //    Test / scalaJSUseMainModuleInitializer := true,
     //    Test / scalaJSUseTestModuleInitializer := false,

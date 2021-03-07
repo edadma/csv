@@ -3,7 +3,7 @@ package xyz.hyperreal.csv
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.should.Matchers
 
-object CSVWriteTests extends AnyFreeSpec with Matchers {
+class CSVWriteTests extends AnyFreeSpec with Matchers {
 
     "empty" in {
       assert(CSVWrite.toString(List(List(""))) == "\n")

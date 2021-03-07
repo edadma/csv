@@ -5,7 +5,7 @@ import org.scalatest.matchers.should.Matchers
 
 import scala.util.Success
 
-object CSVReadTests extends AnyFreeSpec with Matchers {
+class CSVReadTests extends AnyFreeSpec with Matchers {
 
   "tab as delimiter" in {
     CSVRead.fromString("a\tb", '\t') shouldBe Success(List(List("a", "b")))
