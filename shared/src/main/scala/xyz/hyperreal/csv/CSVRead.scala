@@ -3,7 +3,9 @@ package xyz.hyperreal.csv
 import scala.util.Try
 import scala.collection.mutable.ListBuffer
 import xyz.hyperreal.char_reader._
-import xyz.hyperreal.cross_plateform.readableFile
+import xyz.hyperreal.cross_platform.readableFile
+
+import scala.annotation.tailrec
 
 object CSVRead {
 
@@ -13,22 +15,24 @@ object CSVRead {
     fromReader(CharReader.fromFile(file), delimiter)
   }
 
-  def fromString(s: String, delimiter: Char = ',') = fromReader(CharReader.fromString(s), delimiter)
+  def fromString(s: String, delimiter: Char = ','): Try[List[List[String]]] = fromReader(CharReader.fromString(s), delimiter)
 
-  def fromReader(in: CharReader, delimiter: Char = ',') = {
+  def fromReader(in: CharReader, delimiter: Char = ','): Try[List[List[String]]] = {
     var input   = in
     val records = new ListBuffer[List[String]]
 
+    @tailrec
     def readInput: List[List[String]] = {
       def consume(except: Char*): String = {
         val buf = new StringBuilder
 
+        @tailrec
         def consume: String =
           if (input.eoi || (except contains input.ch))
             buf.toString
           else {
             buf += input.ch
-            advance
+            advance()
             consume
           }
 
@@ -38,21 +42,22 @@ object CSVRead {
       def field =
         if (input.more) {
           if (input.ch == '"') {
-            advance
+            advance()
 
             val chunks = new StringBuilder
 
-            def chunk: Unit = {
+            @tailrec
+            def chunk(): Unit = {
               chunks ++= consume('"')
 
               if (input.next.more && input.next.ch == '"') {
                 input = input.next.next
                 chunks += '"'
-                chunk
+                chunk()
               }
             }
 
-            chunk
+            chunk()
             chr('"')
             chunks.toString
           } else
@@ -60,14 +65,15 @@ object CSVRead {
         } else
           ""
 
-      def record = {
+      def record(): Unit = {
         val l = new ListBuffer[String]
 
+        @tailrec
         def fields: List[String] = {
           l += field
 
           if (input.more && input.ch == delimiter) {
-            advance
+            advance()
             fields
           } else
             l.toList
@@ -81,9 +87,9 @@ object CSVRead {
           chr('\n')
       }
 
-      def advance = input = input.next
+      def advance(): Unit = input = input.next
 
-      def chr(c: Char) = {
+      def chr(c: Char): Unit = {
         val s =
           c match {
             case '\r' => "\\r"
@@ -94,33 +100,25 @@ object CSVRead {
         if (input.eoi)
           input.error(s"expected '$s', but end of input")
         else if (input.ch == c)
-          advance
+          advance()
         else
           input.error(s"expected '$s', but encountered '${input.ch}'")
       }
 
-      def opt(c: Char) =
+      def opt(c: Char): Unit =
         if (input.more) {
           if (input.ch == c)
             chr(c)
         }
 
       if (input.more) {
-        record
+        record()
         readInput
       } else if (records.isEmpty)
         List(List("")) // according to spec a csv file has at least one record
       else
         records.toList
     }
-
-    //    def field: String
-    //      =
-    //      {
-    //
-    //
-    //
-    //      }
 
     Try(readInput)
   }

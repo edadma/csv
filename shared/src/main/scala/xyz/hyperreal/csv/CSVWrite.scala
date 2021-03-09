@@ -1,21 +1,13 @@
 package xyz.hyperreal.csv
 
-import java.io.Writer
-import java.nio.charset.Charset
-import java.nio.file.{Files, Path, Paths}
+import xyz.hyperreal.cross_platform.writeFile
 
 object CSVWrite {
 
-  def toFile(file: String, cs: Charset, data: List[List[String]], delimiter: Char = ',', cr: Boolean = false) =
-    toPath(Paths.get(file), cs, data, delimiter, cr)
+  def toFile(file: String, data: List[List[String]], delimiter: Char = ',', cr: Boolean = false): Unit =
+    writeFile(file, toString(data, delimiter, cr))
 
-  def toWriter(out: Writer, data: List[List[String]], delimiter: Char = ',', cr: Boolean = false) =
-    out write toString(data, delimiter, cr)
-
-  def toPath(path: Path, cs: Charset, data: List[List[String]], delimiter: Char = ',', cr: Boolean = false) =
-    toWriter(Files.newBufferedWriter(path, cs), data, delimiter, cr)
-
-  def toString(data: List[List[String]], delimiter: Char = ',', cr: Boolean = false) = {
+  def toString(data: List[List[String]], delimiter: Char = ',', cr: Boolean = false): String = {
     val buf = new StringBuilder
     val q   = "\""
 
