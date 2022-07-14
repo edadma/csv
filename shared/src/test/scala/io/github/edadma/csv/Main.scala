@@ -1,4 +1,4 @@
-package xyz.hyperreal.csv
+package io.github.edadma.csv
 
 object Main extends App {
 

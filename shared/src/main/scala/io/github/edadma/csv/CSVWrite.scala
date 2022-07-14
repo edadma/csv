@@ -1,6 +1,6 @@
-package xyz.hyperreal.csv
+package io.github.edadma.csv
 
-import xyz.hyperreal.cross_platform.writeFile
+import io.github.edadma.cross_platform.writeFile
 
 object CSVWrite {
 

@@ -1,25 +1,26 @@
 lazy val csv = crossProject(JSPlatform, JVMPlatform, NativePlatform).in(file(".")).
   settings(
     name := "csv",
-    version := "0.1.1",
-    scalaVersion := "2.13.5",
+    version := "0.1.2",
+    scalaVersion := "3.1.3",
     scalacOptions ++=
       Seq(
         "-deprecation", "-feature", "-unchecked",
-        "-language:postfixOps", "-language:implicitConversions", "-language:existentials", "-language:dynamics",
-        "-Xasync"
+        "-language:postfixOps", "-language:implicitConversions", "-language:existentials", "-language:dynamics"
       ),
-    organization := "xyz.hyperreal",
-    mainClass := Some("xyz.hyperreal.csv.Main"),
-    libraryDependencies += "org.scalatest" %%% "scalatest" % "3.2.5" % "test",
-    libraryDependencies += "xyz.hyperreal" %%% "char-reader" % "0.1.9",
-    libraryDependencies += "xyz.hyperreal" %%% "cross-platform" % "0.1.0-snapshot.3",
+    organization := "io.github.edadma",
+    githubOwner := "edadma",
+    githubRepository := name.value,
+    mainClass := Some(s"${organization.value}.${name.value}.Main"),
+    libraryDependencies += "org.scalatest" %%% "scalatest" % "3.2.12" % "test",
+    libraryDependencies += "io.github.edadma" %%% "char-reader" % "0.1.10",
+    libraryDependencies += "io.github.edadma" %%% "cross-platform" % "0.1.3",
     publishMavenStyle := true,
-    publishArtifact in Test := false,
+    Test / publishArtifact := false,
     licenses += "ISC" -> url("https://opensource.org/licenses/ISC")
   ).
   jvmSettings(
-    libraryDependencies += "org.scala-js" %% "scalajs-stubs" % "1.0.0" % "provided",
+    libraryDependencies += "org.scala-js" %% "scalajs-stubs" % "1.1.0" % "provided",
   ).
   nativeSettings(
     nativeLinkStubs := true

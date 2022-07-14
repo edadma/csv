@@ -1,4 +1,4 @@
-package xyz.hyperreal.csv
+package io.github.edadma.csv
 
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.should.Matchers

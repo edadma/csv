@@ -1,9 +1,9 @@
-package xyz.hyperreal.csv
+package io.github.edadma.csv
 
 import scala.util.Try
 import scala.collection.mutable.ListBuffer
-import xyz.hyperreal.char_reader._
-import xyz.hyperreal.cross_platform.readableFile
+import io.github.edadma.char_reader._
+import io.github.edadma.cross_platform.readableFile
 
 import scala.annotation.tailrec
 
