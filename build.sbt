@@ -1,7 +1,12 @@
+ThisBuild / licenses += "ISC" -> url("https://opensource.org/licenses/ISC")
+ThisBuild / versionScheme := Some("semver-spec")
+
+publish / skip := true
+
 lazy val csv = crossProject(JSPlatform, JVMPlatform, NativePlatform).in(file(".")).
   settings(
     name := "csv",
-    version := "0.1.2",
+    version := "0.1.4",
     scalaVersion := "3.1.3",
     scalacOptions ++=
       Seq(
@@ -17,7 +22,7 @@ lazy val csv = crossProject(JSPlatform, JVMPlatform, NativePlatform).in(file("."
     libraryDependencies += "io.github.edadma" %%% "cross-platform" % "0.1.3",
     publishMavenStyle := true,
     Test / publishArtifact := false,
-    licenses += "ISC" -> url("https://opensource.org/licenses/ISC")
+    licenses += "ISC" -> url("https://opensource.org/licenses/ISC"),
   ).
   jvmSettings(
     libraryDependencies += "org.scala-js" %% "scalajs-stubs" % "1.1.0" % "provided",
