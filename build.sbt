@@ -7,7 +7,7 @@ lazy val csv = crossProject(JSPlatform, JVMPlatform, NativePlatform)
   .in(file("."))
   .settings(
     name         := "csv",
-    version      := "0.1.5",
+    version      := "0.1.6",
     scalaVersion := "3.5.2",
     scalacOptions ++=
       Seq(
@@ -19,14 +19,17 @@ lazy val csv = crossProject(JSPlatform, JVMPlatform, NativePlatform)
         "-language:existentials",
         "-language:dynamics",
       ),
-    organization                               := "io.github.edadma",
-    githubOwner                                := "edadma",
-    githubRepository                           := name.value,
-    libraryDependencies += "org.scalatest"    %%% "scalatest"   % "3.2.19" % "test",
-    libraryDependencies += "io.github.edadma" %%% "char-reader" % "0.1.18",
-    publishMavenStyle                          := true,
-    Test / publishArtifact                     := false,
-    licenses += "ISC"                          -> url("https://opensource.org/licenses/ISC"),
+    organization                            := "io.github.edadma",
+    githubOwner                             := "edadma",
+    githubRepository                        := name.value,
+    libraryDependencies += "org.scalatest" %%% "scalatest" % "3.2.19" % "test",
+    libraryDependencies ++= Seq(
+      "io.github.edadma" %%% "char-reader"    % "0.1.18",
+      "io.github.edadma" %%% "cross-platform" % "0.0.5",
+    ),
+    publishMavenStyle      := true,
+    Test / publishArtifact := false,
+    licenses += "ISC"      -> url("https://opensource.org/licenses/ISC"),
   )
   .jvmSettings(
     libraryDependencies += "org.scala-js" %% "scalajs-stubs" % "1.1.0" % "provided",
