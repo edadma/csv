@@ -7,7 +7,7 @@ lazy val csv = crossProject(JSPlatform, JVMPlatform, NativePlatform)
   .in(file("."))
   .settings(
     name         := "csv",
-    version      := "0.1.6",
+    version      := "0.1.7",
     scalaVersion := "3.5.2",
     scalacOptions ++=
       Seq(

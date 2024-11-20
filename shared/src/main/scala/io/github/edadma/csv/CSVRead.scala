@@ -23,9 +23,20 @@ object CSVRead {
 
     Try {
       fromReaderStreamed(in, records += _, delimiter)
-      records.toSeq
+
+      if records.isEmpty then Seq(Seq(""))
+      else records.toSeq
     }
   }
+
+  def fromFileStreamed(file: String, output: Seq[String] => Unit, delimiter: Char = ','): Unit = {
+    require(readableFile(file), s"not readable: $file")
+
+    fromReaderStreamed(CharReader.fromFile(file), output, delimiter)
+  }
+
+  def fromStringStreamed(s: String, output: Seq[String] => Unit, delimiter: Char = ','): Unit =
+    fromReaderStreamed(CharReader.fromString(s), output, delimiter)
 
   def fromReaderStreamed(in: CharReader, output: Seq[String] => Unit, delimiter: Char = ','): Unit =
     var input = in

@@ -8,16 +8,16 @@ import scala.util.Success
 class CSVReadTests extends AnyFreeSpec with Matchers {
 
   "tab as delimiter" in {
-    CSVRead.fromString("a\tb", '\t') shouldBe Success(List(List("a", "b")))
-    assert(CSVRead.fromString("\tb", '\t') == Success(List(List("", "b"))))
-    assert(CSVRead.fromString("a\t", '\t') == Success(List(List("a", ""))))
-    assert(CSVRead.fromString("\t", '\t') == Success(List(List("", ""))))
+    CSVRead.fromString("a\tb", '\t') shouldBe Success(Seq(Seq("a", "b")))
+    assert(CSVRead.fromString("\tb", '\t') == Success(Seq(Seq("", "b"))))
+    assert(CSVRead.fromString("a\t", '\t') == Success(Seq(Seq("a", ""))))
+    assert(CSVRead.fromString("\t", '\t') == Success(Seq(Seq("", ""))))
   }
 
   "empty file" in {
-    assert(CSVRead.fromString("") == Success(List(List(""))))
-    assert(CSVRead.fromString("\n") == Success(List(List(""))))
-    assert(CSVRead.fromString("\r\n") == Success(List(List(""))))
+    assert(CSVRead.fromString("") == Success(Seq(Seq(""))))
+    assert(CSVRead.fromString("\n") == Success(Seq(Seq(""))))
+    assert(CSVRead.fromString("\r\n") == Success(Seq(Seq(""))))
   }
 
   "basic" in {
@@ -27,7 +27,7 @@ class CSVReadTests extends AnyFreeSpec with Matchers {
           |11,12
           |21,22
           """.trim.stripMargin,
-      ) == Success(List(List("11", "12"), List("21", "22"))),
+      ) == Success(Seq(Seq("11", "12"), Seq("21", "22"))),
     )
     assert(
       CSVRead.fromString(
@@ -35,21 +35,21 @@ class CSVReadTests extends AnyFreeSpec with Matchers {
             |11
             |21
           """.trim.stripMargin,
-      ) == Success(List(List("11"), List("21"))),
+      ) == Success(Seq(Seq("11"), Seq("21"))),
     )
     assert(
       CSVRead.fromString(
         """
             |11,12
           """.trim.stripMargin,
-      ) == Success(List(List("11", "12"))),
+      ) == Success(Seq(Seq("11", "12"))),
     )
     assert(
       CSVRead.fromString(
         """
             |11
           """.trim.stripMargin,
-      ) == Success(List(List("11"))),
+      ) == Success(Seq(Seq("11"))),
     )
   }
 
@@ -60,7 +60,7 @@ class CSVReadTests extends AnyFreeSpec with Matchers {
             |11,"12"
             |"2""1","22"
           """.trim.stripMargin,
-      ) == Success(List(List("11", "12"), List("2\"1", "22"))),
+      ) == Success(Seq(Seq("11", "12"), Seq("2\"1", "22"))),
     )
   }
 
@@ -71,7 +71,7 @@ class CSVReadTests extends AnyFreeSpec with Matchers {
             |,12
             |21,22
           """.trim.stripMargin,
-      ) == Success(List(List("", "12"), List("21", "22"))),
+      ) == Success(Seq(Seq("", "12"), Seq("21", "22"))),
     )
     assert(
       CSVRead.fromString(
@@ -79,7 +79,7 @@ class CSVReadTests extends AnyFreeSpec with Matchers {
             |11,
             |21,22
           """.trim.stripMargin,
-      ) == Success(List(List("11", ""), List("21", "22"))),
+      ) == Success(Seq(Seq("11", ""), Seq("21", "22"))),
     )
     assert(
       CSVRead.fromString(
@@ -87,7 +87,7 @@ class CSVReadTests extends AnyFreeSpec with Matchers {
             |11,12
             |,22
           """.trim.stripMargin,
-      ) == Success(List(List("11", "12"), List("", "22"))),
+      ) == Success(Seq(Seq("11", "12"), Seq("", "22"))),
     )
     assert(
       CSVRead.fromString(
@@ -95,7 +95,7 @@ class CSVReadTests extends AnyFreeSpec with Matchers {
             |11,12
             |21,
           """.trim.stripMargin,
-      ) == Success(List(List("11", "12"), List("21", ""))),
+      ) == Success(Seq(Seq("11", "12"), Seq("21", ""))),
     )
     assert(
       CSVRead.fromString(
@@ -103,7 +103,7 @@ class CSVReadTests extends AnyFreeSpec with Matchers {
             |
             |21
           """.trim.stripMargin,
-      ) == Success(List(List(""), List("21"))),
+      ) == Success(Seq(Seq(""), Seq("21"))),
     )
     assert(
       CSVRead.fromString(
@@ -112,7 +112,7 @@ class CSVReadTests extends AnyFreeSpec with Matchers {
             |
             |
           """.trim.stripMargin,
-      ) == Success(List(List("11"), List(""))),
+      ) == Success(Seq(Seq("11"), Seq(""))),
     )
   }
 
