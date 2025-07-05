@@ -55,7 +55,7 @@ lazy val csv = crossProject(JSPlatform, JVMPlatform, NativePlatform)
     libraryDependencies += "org.scalatest" %%% "scalatest" % "3.2.19" % "test",
     libraryDependencies ++= Seq(
       "io.github.edadma" %%% "char-reader"    % "0.1.21",
-      "io.github.edadma" %%% "cross-platform" % "0.0.4",
+      "io.github.edadma" %%% "cross-platform" % "0.0.6",
     ),
     publishMavenStyle      := true,
     Test / publishArtifact := false,
